@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="mapid" style="height: 400px;"></div>
+<button id="printCoordinates">Print Coordinates</button>
+<script >
+ document.addEventListener("DOMContentLoaded", function () {
+     var defaultLocation = [35.6895, 51.3890];
+     var mymap = L.map('mapid').setView(defaultLocation, 13);
+ 
+     var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+         attribution: '© OpenStreetMap contributors'
+     }).addTo(mymap);
+ 
+     var defaultMarker = L.marker(defaultLocation).addTo(mymap)
+         .bindPopup('Default Location').openPopup();
+ 
+     mymap.on('click', function (e) {
+         var clickedLatLng = e.latlng;
+ 
+         // حذف نشانگر و popup مربوط به default location
+         mymap.removeLayer(defaultMarker);
+ 
+         // افزودن یک نشانگر جدید به موقعیت کلیک شده
+         var newMarker = L.marker(clickedLatLng).addTo(mymap)
+             .bindPopup('Clicked Location').openPopup();
+ 
+         // به نشانگر جدید انتقال دهید تا بتوانید آن را در مراحل بعدی مدیریت کنید
+         defaultMarker = newMarker;
+     });
+ 
+     document.getElementById('printCoordinates').addEventListener('click', function () {
+         console.log('Current Location:', mymap.getCenter());
+     });
+ });
+
+</script>
